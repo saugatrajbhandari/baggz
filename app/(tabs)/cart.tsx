@@ -1,27 +1,53 @@
+import CartCard from "@/components/cart/cart-card";
 import { getProductInCartApi } from "@/services/cart/get-product-in-cart-api";
-import { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { getProductDetailApi } from "@/services/products/get-product-detail-api";
+import { CartProduct, Product, ProductDetail } from "@/types";
+import { useEffect, useState } from "react";
+import { View, Text, FlatList } from "react-native";
 
-export default function Tab() {
+export default function Cart() {
+  const [cartProducts, setCartProducts] = useState<CartProduct[]>();
+  const [products, setProduct] = useState<ProductDetail[]>([]);
+
   useEffect(() => {
     (async () => {
       const cartResponse = await getProductInCartApi();
-
-      console.log(JSON.stringify(cartResponse, null, 2));
+      setCartProducts(cartResponse);
     })();
   }, []);
 
+  useEffect(() => {
+    if (!cartProducts) return;
+
+    const cartProductWithIdAndQuantity = cartProducts[0].products;
+
+    (async () => {
+      const fetchedProducts: ProductDetail[] = await Promise.all(
+        cartProductWithIdAndQuantity.map(async (product) => {
+          const productResponse = await getProductDetailApi({
+            id: String(product.productId),
+          });
+          return {
+            ...productResponse,
+            quantity: product.quantity,
+          } as ProductDetail;
+        })
+      );
+
+      setProduct(fetchedProducts);
+    })();
+  }, [cartProducts]);
+
   return (
-    <View className="flex-1">
-      <Text>Tab [Home|Settings]</Text>
+    <View className="flex-1 px-4 mt-4">
+      <FlatList
+        numColumns={1}
+        contentContainerClassName="gap-2"
+        data={products}
+        renderItem={({ item: product }) => (
+          <CartCard key={product.id} product={product} />
+        )}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

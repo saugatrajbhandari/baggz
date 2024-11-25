@@ -5,6 +5,7 @@ import Products from "@/components/home/products";
 import { ScrollView } from "react-native";
 import Categories from "@/components/home/categories";
 import Offer from "@/components/home/offer";
+import SearchInput from "@/components/home/search-input";
 
 export default function Tab() {
   return (
@@ -14,6 +15,7 @@ export default function Tab() {
         showsVerticalScrollIndicator={false}
       >
         <Title />
+        <SearchInput />
         <Categories />
         <Products />
         <Offer />

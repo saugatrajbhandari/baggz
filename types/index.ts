@@ -32,6 +32,7 @@ export type CategoryType = (typeof Categories)[number];
 export interface ProductDetail {
   category: string;
   description: string;
+  quantity?: number;
   id: number;
   image: string;
   price: number;
@@ -42,4 +43,15 @@ export interface ProductDetail {
 export interface Rating {
   count: number;
   rate: number;
+}
+export interface CartProduct {
+  id: number;
+  userId: number;
+  date: Date;
+  products: ProductCart[];
+  __v: number;
+}
+interface ProductCart {
+  productId: number;
+  quantity: number;
 }
