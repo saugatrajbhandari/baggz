@@ -85,7 +85,7 @@ const ProductDetail = () => {
         </View>
       </ScrollView>
 
-      <View className="absolute bottom-0 -translate-y-1/2 left-0 right-0 px-4 pb-14">
+      <View className="absolute bottom-0 -translate-y-1/2 left-0 right-0 px-4 ">
         <Pressable
           disabled={isPending}
           onPress={handleAddToCart}
